@@ -9,7 +9,6 @@
 #pragma comment(lib, "SDLmain.lib")
 #pragma comment(lib, "SDL_TTF.lib")
 
-#include <stack>     // We'll use the STL stack to store our function pointers
 #include <string>    // We'll use the STL string for text output and for our file names
 #include <fstream>   // We need to read in our levels from a file
 #include "SDL/SDL.h"     // Main SDL header 
@@ -20,7 +19,7 @@ using namespace std;
 
 // The STL stack can't take a function pointer as a type //
 // so we encapsulate a function pointer within a struct. //
-struct StateStruct 
+struct StateStruct
 {
 	void (*StatePointer)();
 };
@@ -53,8 +52,34 @@ struct Ball
 	int y_speed; 
 };
 
+#define MAX_STACK_SIZE     16
+
+class StateStack {
+  public:
+	StateStack() : stack_size(0) {}
+	bool empty() const {
+		return (stack_size == 0);
+	}
+	const StateStruct& top() const {
+		if (!empty())
+			return pointers[stack_size - 1];
+		return StateStruct();
+	}
+	void pop() {
+		if (!empty())
+			--stack_size;
+	}
+	void push(const StateStruct& ptr) {
+		if (stack_size < MAX_STACK_SIZE)
+			pointers[stack_size++] = ptr;
+	}
+  private:
+	StateStruct pointers[MAX_STACK_SIZE];
+	int stack_size;
+};
+
 // Global data //
-stack<StateStruct> g_StateStack;		 // Our state stack
+StateStack		   g_StateStack;		 // Our state stack
 SDL_Surface*       g_Bitmap = NULL;		 // Our background image
 SDL_Surface*       g_Window = NULL;		 // Our backbuffer
 SDL_Event		   g_Event;				 // An SDL event structure for input
