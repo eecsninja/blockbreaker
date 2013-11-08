@@ -12,8 +12,8 @@
 #include <stack>     // We'll use the STL stack to store our function pointers
 #include <string>    // We'll use the STL string for text output and for our file names
 #include <fstream>   // We need to read in our levels from a file
-#include "SDL.h"     // Main SDL header 
-#include "SDL_TTF.h" // True Type Font header
+#include "SDL/SDL.h"     // Main SDL header 
+#include "SDL/SDL_TTF.h" // True Type Font header
 #include "Defines.h" // Our defines header
 
 using namespace std;   
