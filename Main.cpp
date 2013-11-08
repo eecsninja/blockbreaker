@@ -882,7 +882,8 @@ void MoveBall()
 	// If the ball is moving left, we see if it hits the wall. If does, //
 	// we change its direction. We do the same thing if it's moving right. //
 	if ( ( (g_Ball.x_speed < 0) && (g_Ball.screen_location.x <= 0)  ) || 
-		 ( (g_Ball.x_speed > 0) && (g_Ball.screen_location.x >= WINDOW_WIDTH) ) )
+		 ( (g_Ball.x_speed > 0) &&
+		   (g_Ball.screen_location.x + g_Ball.screen_location.w >= WINDOW_WIDTH) ) )
 	{
 		g_Ball.x_speed = -g_Ball.x_speed;
 	}
