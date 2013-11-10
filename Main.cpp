@@ -233,9 +233,9 @@ void InitBlocks()
 	int temp_hits;
 
 	// Iterate through each row and column of blocks //
-	for (int row=1; row<=NUM_ROWS; row++)
+	for (int row=0; row<NUM_ROWS; row++)
 	{
-		for (int col=1; col<=NUMCOLS; col++)
+		for (int col=0; col<NUMCOLS; col++)
 		{
 			// Read the next value into temp_hits // 
 			inFile >> temp_hits;
@@ -248,8 +248,8 @@ void InitBlocks()
 				// We set the location of the block according to what row and column   //
 				// we're on in our loop. Notice that we use BLOCK_SCREEN_BUFFER to set //
 				// the blocks away from the sides of the screen. //
-				g_Blocks[index].screen_location.x = col*BLOCK_WIDTH - BLOCK_SCREEN_BUFFER;
-				g_Blocks[index].screen_location.y = row*BLOCK_HEIGHT + BLOCK_SCREEN_BUFFER;
+				g_Blocks[index].screen_location.x = col*BLOCK_WIDTH + BLOCK_WIDTH - BLOCK_SCREEN_BUFFER;
+				g_Blocks[index].screen_location.y = row*BLOCK_HEIGHT + BLOCK_HEIGHT + BLOCK_SCREEN_BUFFER;
 				g_Blocks[index].screen_location.w = BLOCK_WIDTH;
 				g_Blocks[index].screen_location.h = BLOCK_HEIGHT;
 				g_Blocks[index].bitmap_location.w = BLOCK_WIDTH;
