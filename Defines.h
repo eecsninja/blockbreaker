@@ -54,6 +54,8 @@
 
 // Ball speeds //
 #define BALL_SPEED_MODIFIER 5  // divide location on paddle by this
+#define BALL_SPEED_MODIFIER_SHIFT 8  // Use this for bit shifting in place of
+                                     // actual division.
 #define BALL_SPEED_Y        10 // max speed of ball along y axis
 
 // Maximum number of times the player can miss the ball //

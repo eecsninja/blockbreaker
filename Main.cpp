@@ -891,7 +891,11 @@ void HandleBall()
 		int paddle_location = ball_center - paddle_center;
 
 		// Increase X speed according to distance from center of paddle. //
-		g_Ball.x_speed = paddle_location / BALL_SPEED_MODIFIER;
+		// Use bit shifting, multiplication, and pre-compile division to avoid
+		// runtime division, which can be expensive on embedded systems.
+		g_Ball.x_speed =
+			(paddle_location * ((1 << BALL_SPEED_MODIFIER_SHIFT) /
+				BALL_SPEED_MODIFIER)) >> BALL_SPEED_MODIFIER_SHIFT;
 		g_Ball.y_speed = -g_Ball.y_speed;
 	}
 
