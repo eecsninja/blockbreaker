@@ -9,7 +9,6 @@
 #pragma comment(lib, "SDLmain.lib")
 #pragma comment(lib, "SDL_TTF.lib")
 
-#include <fstream>   // We need to read in our levels from a file
 #include "SDL/SDL.h"     // Main SDL header 
 #include "SDL/SDL_TTF.h" // True Type Font header
 #include "Defines.h" // Our defines header
@@ -211,8 +210,6 @@ void Init()
 // reading in values from the level file and setting up the blocks accordingly. //
 void InitBlocks()
 {
-	fstream inFile;
-
 	// The following code creates a buffer storing the proper file name. If   //
 	// g_Level = 1, we get: "data\\level" + "1" + ".txt" = "data\\level1.txt" //
 	char file_name[256];              // for sprintf
@@ -220,7 +217,7 @@ void InitBlocks()
 	sprintf(file_name, "data\\level%d.txt", g_Level);
 
 	// Open the file for input.
-	inFile.open(file_name, ios::in);
+	FILE* inFile = fopen(file_name, "r");
 
 	int index = 0; // used to index blocks in g_Blocks array
 
@@ -234,7 +231,7 @@ void InitBlocks()
 		for (int col=0; col<NUM_COLS; col++)
 		{
 			// Read the next value into temp_hits // 
-			inFile >> temp_hits;
+			fscanf(inFile, "%d", &temp_hits);
 
 			g_Blocks[index].num_hits = temp_hits;
 
@@ -279,7 +276,7 @@ void InitBlocks()
 		}
 	}
 
-	inFile.close();	
+	fclose(inFile);
 }
 
 // This function shuts down our game. //
