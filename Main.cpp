@@ -743,9 +743,23 @@ void CheckBlockCollisions()
 	bool left = false;
 	bool right = false;
 
-	for (int row=0; row < NUM_ROWS; ++row)
+	int left_col = (left_x - BLOCK_WIDTH + BLOCK_SCREEN_BUFFER) / BLOCK_WIDTH;
+	int right_col = (right_x - BLOCK_WIDTH + BLOCK_SCREEN_BUFFER) / BLOCK_WIDTH;
+	if (left_col < 0)
+		left_col = 0;
+	if (right_col >= NUM_COLS)
+		right_col = NUM_COLS - 1;
+
+	int top_row = (top_y - BLOCK_WIDTH - BLOCK_SCREEN_BUFFER) / BLOCK_HEIGHT;
+	int bottom_row = (bottom_x - BLOCK_WIDTH - BLOCK_SCREEN_BUFFER) / BLOCK_HEIGHT;
+	if (top_row < 0)
+		top_row = 0;
+	if (bottom_row >= NUM_ROWS)
+		bottom_row = NUM_ROWS - 1;
+
+	for (int row = top_row; row <= bottom_row; ++row)
 	{
-		for (int col=0; col < NUM_COLS; ++col)
+		for (int col = left_col; col <= right_col; ++col)
 		{
 			int block = col + row * NUM_COLS;
 			if (g_Blocks[block].num_hits == 0)
