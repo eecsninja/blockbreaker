@@ -240,50 +240,46 @@ void InitBlocks()
 			// Read the next value into temp_hits // 
 			inFile >> temp_hits;
 
-			// If temp_hits is zero, we go on to the next block //
-			if (temp_hits != 0)
+			g_Blocks[index].num_hits = temp_hits;
+
+			// We set the location of the block according to what row and column   //
+			// we're on in our loop. Notice that we use BLOCK_SCREEN_BUFFER to set //
+			// the blocks away from the sides of the screen. //
+			g_Blocks[index].screen_location.x = col*BLOCK_WIDTH + BLOCK_WIDTH - BLOCK_SCREEN_BUFFER;
+			g_Blocks[index].screen_location.y = row*BLOCK_HEIGHT + BLOCK_HEIGHT + BLOCK_SCREEN_BUFFER;
+			g_Blocks[index].screen_location.w = BLOCK_WIDTH;
+			g_Blocks[index].screen_location.h = BLOCK_HEIGHT;
+			g_Blocks[index].bitmap_location.w = BLOCK_WIDTH;
+			g_Blocks[index].bitmap_location.h = BLOCK_HEIGHT;
+
+			// Now we set the bitmap location rect according to num_hits //
+			switch (g_Blocks[index].num_hits)
 			{
-				g_Blocks[index].num_hits = temp_hits;
-			
-				// We set the location of the block according to what row and column   //
-				// we're on in our loop. Notice that we use BLOCK_SCREEN_BUFFER to set //
-				// the blocks away from the sides of the screen. //
-				g_Blocks[index].screen_location.x = col*BLOCK_WIDTH + BLOCK_WIDTH - BLOCK_SCREEN_BUFFER;
-				g_Blocks[index].screen_location.y = row*BLOCK_HEIGHT + BLOCK_HEIGHT + BLOCK_SCREEN_BUFFER;
-				g_Blocks[index].screen_location.w = BLOCK_WIDTH;
-				g_Blocks[index].screen_location.h = BLOCK_HEIGHT;
-				g_Blocks[index].bitmap_location.w = BLOCK_WIDTH;
-				g_Blocks[index].bitmap_location.h = BLOCK_HEIGHT;
-
-				// Now we set the bitmap location rect according to num_hits //
-				switch (g_Blocks[index].num_hits)
+				case 1:
 				{
-					case 1:
-					{
-						g_Blocks[index].bitmap_location.x = YELLOW_X;
-						g_Blocks[index].bitmap_location.y = YELLOW_Y;
-					} break;
-					case 2:
-					{
-						g_Blocks[index].bitmap_location.x = RED_X;
-						g_Blocks[index].bitmap_location.y = RED_Y;
-					} break;
-					case 3:
-					{
-						g_Blocks[index].bitmap_location.x = GREEN_X;
-						g_Blocks[index].bitmap_location.y = GREEN_Y;
-					} break;
-					case 4:
-					{
-						g_Blocks[index].bitmap_location.x = BLUE_X;
-						g_Blocks[index].bitmap_location.y = BLUE_Y;
-					} break;
-				}
-
-				// For future use, keep track of how many blocks we have. //
-				g_NumBlocks++;
-				index++;	// move to next block
+					g_Blocks[index].bitmap_location.x = YELLOW_X;
+					g_Blocks[index].bitmap_location.y = YELLOW_Y;
+				} break;
+				case 2:
+				{
+					g_Blocks[index].bitmap_location.x = RED_X;
+					g_Blocks[index].bitmap_location.y = RED_Y;
+				} break;
+				case 3:
+				{
+					g_Blocks[index].bitmap_location.x = GREEN_X;
+					g_Blocks[index].bitmap_location.y = GREEN_Y;
+				} break;
+				case 4:
+				{
+					g_Blocks[index].bitmap_location.x = BLUE_X;
+					g_Blocks[index].bitmap_location.y = BLUE_Y;
+				} break;
 			}
+
+			// For future use, keep track of how many blocks we have. //
+			g_NumBlocks++;
+			index++;	// move to next block
 		}
 	}
 
@@ -351,9 +347,10 @@ void Game()
 		SDL_BlitSurface(g_Bitmap, &g_Ball.bitmap_location,   g_Window, &g_Ball.screen_location);
 
 		// Iterate through the blocks array, drawing each block //
-		for (int i=0; i<g_NumBlocks; i++)
+		for (int i=0; i < NUM_ROWS * NUM_COLS; i++)
 		{
-			SDL_BlitSurface(g_Bitmap, &g_Blocks[i].bitmap_location, g_Window, &g_Blocks[i].screen_location);
+			if (g_Blocks[i].num_hits > 0)
+				SDL_BlitSurface(g_Bitmap, &g_Blocks[i].bitmap_location, g_Window, &g_Blocks[i].screen_location);
 		}
 
 		// Output the number of lives the player has left and the current level //
@@ -746,8 +743,11 @@ void CheckBlockCollisions()
 	bool left = false;
 	bool right = false;
 
-	for (int block=0; block<g_NumBlocks; block++)
+	for (int block=0; block < NUM_ROWS * NUM_COLS; block++)
 	{
+		if (g_Blocks[block].num_hits == 0)
+			continue;
+
 		// top //
 		if ( CheckPointInRect(top_x, top_y, g_Blocks[block].screen_location) )
 		{
@@ -800,16 +800,14 @@ void CheckBlockCollisions()
 // the color of the block and check to see if the hit count reached zero.  //
 void HandleBlockCollision(int index)
 {
+	if (g_Blocks[index].num_hits == 0)
+		return;
+
 	g_Blocks[index].num_hits--;
 
 	// If num_hits is 0, the block needs to be erased //
 	if (g_Blocks[index].num_hits == 0)
 	{
-		// Since order isn't important in our block array, we can quickly erase a block  //
-		// simply by copying the last block into the deleted block's space. Note that we //
-		// have to decrement the block count so we don't keep trying to access the       //
-		// last block (the one we just moved). //
-		g_Blocks[index] = g_Blocks[g_NumBlocks-1];
 		g_NumBlocks--;
 
 		// Check to see if it's time to change the level //
