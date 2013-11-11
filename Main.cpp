@@ -257,13 +257,13 @@ void InitBlocks()
 			{
 				case 1:
 				{
-					g_Blocks[index].bitmap_location.x = YELLOW_X;
-					g_Blocks[index].bitmap_location.y = YELLOW_Y;
+					g_Blocks[index].bitmap_location.x = RED_X;
+					g_Blocks[index].bitmap_location.y = RED_Y;
 				} break;
 				case 2:
 				{
-					g_Blocks[index].bitmap_location.x = RED_X;
-					g_Blocks[index].bitmap_location.y = RED_Y;
+					g_Blocks[index].bitmap_location.x = YELLOW_X;
+					g_Blocks[index].bitmap_location.y = YELLOW_Y;
 				} break;
 				case 3:
 				{
@@ -841,13 +841,13 @@ void HandleBlockCollision(int index)
 		{
 			case 1:
 			{
-				g_Blocks[index].bitmap_location.x = YELLOW_X;
-				g_Blocks[index].bitmap_location.y = YELLOW_Y;
+				g_Blocks[index].bitmap_location.x = RED_X;
+				g_Blocks[index].bitmap_location.y = RED_Y;
 			} break;
 			case 2:
 			{
-				g_Blocks[index].bitmap_location.x = RED_X;
-				g_Blocks[index].bitmap_location.y = RED_Y;
+				g_Blocks[index].bitmap_location.x = YELLOW_X;
+				g_Blocks[index].bitmap_location.y = YELLOW_Y;
 			} break;
 			case 3:
 			{
