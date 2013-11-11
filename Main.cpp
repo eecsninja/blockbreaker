@@ -743,34 +743,38 @@ void CheckBlockCollisions()
 	bool left = false;
 	bool right = false;
 
-	for (int block=0; block < NUM_ROWS * NUM_COLS; block++)
+	for (int row=0; row < NUM_ROWS; ++row)
 	{
-		if (g_Blocks[block].num_hits == 0)
-			continue;
+		for (int col=0; col < NUM_COLS; ++col)
+		{
+			int block = col + row * NUM_COLS;
+			if (g_Blocks[block].num_hits == 0)
+				continue;
 
-		// top //
-		if ( CheckPointInRect(top_x, top_y, g_Blocks[block].screen_location) )
-		{
-			top = true;
-			HandleBlockCollision(block);
-		}
-		// bottom //
-		if ( CheckPointInRect(bottom_x, bottom_y, g_Blocks[block].screen_location) )
-		{
-			bottom = true;
-			HandleBlockCollision(block);
-		}
-		// left //
-		if ( CheckPointInRect(left_x, left_y, g_Blocks[block].screen_location) )
-		{
-			left = true;
-			HandleBlockCollision(block);
-		}
-		// right //
-		if ( CheckPointInRect(right_x, right_y, g_Blocks[block].screen_location) )
-		{
-			right = true;
-			HandleBlockCollision(block);
+			// top //
+			if ( CheckPointInRect(top_x, top_y, g_Blocks[block].screen_location) )
+			{
+				top = true;
+				HandleBlockCollision(block);
+			}
+			// bottom //
+			if ( CheckPointInRect(bottom_x, bottom_y, g_Blocks[block].screen_location) )
+			{
+				bottom = true;
+				HandleBlockCollision(block);
+			}
+			// left //
+			if ( CheckPointInRect(left_x, left_y, g_Blocks[block].screen_location) )
+			{
+				left = true;
+				HandleBlockCollision(block);
+			}
+			// right //
+			if ( CheckPointInRect(right_x, right_y, g_Blocks[block].screen_location) )
+			{
+				right = true;
+				HandleBlockCollision(block);
+			}
 		}
 	}
 
