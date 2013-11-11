@@ -9,7 +9,6 @@
 #pragma comment(lib, "SDLmain.lib")
 #pragma comment(lib, "SDL_TTF.lib")
 
-#include <string>    // We'll use the STL string for text output and for our file names
 #include <fstream>   // We need to read in our levels from a file
 #include "SDL/SDL.h"     // Main SDL header 
 #include "SDL/SDL_TTF.h" // True Type Font header
@@ -100,7 +99,7 @@ void GameLost();
 
 // Helper functions for the main game state functions //
 void ClearScreen();
-void DisplayText(string text, int x, int y, int size, int fR, int fG, int fB, int bR, int bG, int bB);
+void DisplayText(const char* text, int x, int y, int size, int fR, int fG, int fB, int bR, int bG, int bB);
 void HandleMenuInput();
 void HandleGameInput();
 void HandleExitInput();
@@ -214,17 +213,14 @@ void InitBlocks()
 {
 	fstream inFile;
 
-	// The following code creates a string storing the proper file name. If   //
+	// The following code creates a buffer storing the proper file name. If   //
 	// g_Level = 1, we get: "data\\level" + "1" + ".txt" = "data\\level1.txt" //
-	char level_num[256];              // for itoa
-	string file_name = "data\\level"; // the file will always start with "level"
-	itoa(g_Level, level_num, 10);     // convert the level to a string
-	file_name.append(level_num);      // append the level number
-	file_name.append(".txt");         // we'll just use txt's for our levels
+	char file_name[256];              // for sprintf
+	// the file will always start with "level"
+	sprintf(file_name, "data\\level%d.txt", g_Level);
 
-	// Open the file for input. Note that this function takes a    //
-	// char* so we need to use the std::string's c_str() function. //
-	inFile.open(file_name.c_str(), ios::in);  
+	// Open the file for input.
+	inFile.open(file_name, ios::in);
 
 	int index = 0; // used to index blocks in g_Blocks array
 
@@ -356,16 +352,11 @@ void Game()
 		// Output the number of lives the player has left and the current level //
 		char buffer[256];
 
-		string lives = "Lives: ";
-		itoa(g_Lives, buffer, 10);
-		lives.append(buffer);
+		sprintf(buffer, "Lives: %d", g_Lives);
+		DisplayText(buffer, LIVES_X, LIVES_Y, 12, 66, 239, 16, 0, 0, 0);		
 
-		string level = "Level: ";
-		itoa(g_Level, buffer, 10);
-		level.append(buffer);
-		
-		DisplayText(lives, LIVES_X, LIVES_Y, 12, 66, 239, 16, 0, 0, 0);		
-		DisplayText(level, LEVEL_X, LEVEL_Y, 12, 66, 239, 16, 0, 0, 0);		
+		sprintf(buffer, "Level: %d", g_Level);
+		DisplayText(buffer, LEVEL_X, LEVEL_Y, 12, 66, 239, 16, 0, 0, 0);		
 
 		// Tell SDL to display our backbuffer. The four 0's will make //
 		// SDL display the whole screen. //
@@ -452,7 +443,7 @@ void ClearScreen()
 // This function displays text to the screen. It takes the text //
 // to be displayed, the location to display it, the size of the //
 // text, and the color of the text and background.              //
-void DisplayText(string text, int x, int y, int size, int fR, int fG, int fB, int bR, int bG, int bB) 
+void DisplayText(const char* text, int x, int y, int size, int fR, int fG, int fB, int bR, int bG, int bB) 
 {
 	// Open our font and set its size to the given parameter. //
     TTF_Font* font = TTF_OpenFont("arial.ttf", size);
@@ -462,7 +453,7 @@ void DisplayText(string text, int x, int y, int size, int fR, int fG, int fB, in
 
 	// This renders our text to a temporary surface. There //
 	// are other text functions, but this one looks nice.  //
-	SDL_Surface* temp = TTF_RenderText_Shaded(font, text.c_str(), foreground, background);
+	SDL_Surface* temp = TTF_RenderText_Shaded(font, text, foreground, background);
 
 	// A structure storing the destination of our text. //
 	SDL_Rect destination = { x, y, 0, 0 };
