@@ -33,7 +33,7 @@
 // Maximum number of blocks allowed //
 #define MAX_BLOCKS 80
 #define NUM_ROWS   6
-#define NUMCOLS    9
+#define NUM_COLS   9
 
 // Location of the player's paddle in the game //
 #define PLAYER_Y 550

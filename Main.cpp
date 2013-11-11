@@ -235,7 +235,7 @@ void InitBlocks()
 	// Iterate through each row and column of blocks //
 	for (int row=0; row<NUM_ROWS; row++)
 	{
-		for (int col=0; col<NUMCOLS; col++)
+		for (int col=0; col<NUM_COLS; col++)
 		{
 			// Read the next value into temp_hits // 
 			inFile >> temp_hits;
